@@ -34,6 +34,57 @@ struct Archivo {
 
 vector<Archivo> archivos;
 
+// muestra el error y termina el programa
+void error(string mensaje) {
+    cout << "Dato invalido: " << mensaje << endl;
+    exit(1);
+}
+
+int pedir_numero(string texto) {
+    int n;
+    cout << texto;
+    cin >> n;
+    if (cin.fail()) {
+        error("hay que escribir un numero");
+    }
+    return n;
+}
+
+// pide los datos de la simulacion y revisa que esten bien
+void leer_datos() {
+    string nombre;
+
+    disco_mb = pedir_numero("Tamaño del disco (MB): ");
+    bloque_kb = pedir_numero("Tamaño de cada bloque (KB): ");
+    cout << "Mecanismo de asignación (contigua, enlazada o indexada): ";
+    cin >> nombre;
+    min_kb = pedir_numero("Tamaño mínimo de los archivos (KB): ");
+    max_kb = pedir_numero("Tamaño máximo de los archivos (KB): ");
+
+    if (disco_mb <= 0 || bloque_kb <= 0) {
+        error("el disco y el bloque tienen que ser mayores a 0");
+    }
+    if (bloque_kb > disco_mb * 1024) {
+        error("el bloque no puede ser mas grande que el disco");
+    }
+    if (nombre == "contigua") {
+        modo = CONTIGUA;
+    } else if (nombre == "enlazada") {
+        modo = ENLAZADA;
+    } else if (nombre == "indexada") {
+        modo = INDEXADA;
+    } else {
+        error("el mecanismo tiene que ser contigua, enlazada o indexada");
+    }
+    if (min_kb <= 0 || min_kb > max_kb) {
+        error("el rango de archivos tiene que cumplir 0 < minimo <= maximo");
+    }
+}
+
 int main() {
+    leer_datos();
+
+    cout << "Disco de " << disco_mb << " MB con bloques de " << bloque_kb << " KB" << endl;
+    cout << "Archivos de " << min_kb << " a " << max_kb << " KB" << endl;
     return 0;
 }
