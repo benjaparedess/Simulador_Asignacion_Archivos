@@ -102,8 +102,18 @@ void crear_archivo(int seg) {
 
 int main() {
     leer_datos();
+    srand(time(NULL));
 
     cout << "Disco de " << disco_mb << " MB con bloques de " << bloque_kb << " KB" << endl;
     cout << "Archivos de " << min_kb << " a " << max_kb << " KB" << endl;
+
+    // un ciclo por cada segundo de la simulacion
+    // por ahora termina a los 10 segundos, despues va a terminar cuando no haya espacio
+    for (int seg = 1; seg <= 10; seg++) {
+        usleep(SEGUNDO_US);
+        if (seg % 2 == 0) {
+            crear_archivo(seg);
+        }
+    }
     return 0;
 }
