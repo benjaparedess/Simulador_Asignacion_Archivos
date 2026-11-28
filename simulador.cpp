@@ -42,6 +42,49 @@ struct Archivo {
 
 vector<Archivo> archivos;
 
+// arma el disco con todos los bloques libres
+void iniciar_disco() {
+    num_bloques = disco_mb * 1024 / bloque_kb;
+    disco.assign(num_bloques, 0);
+}
+
+// cuantos bloques libres hay en total
+int bloques_libres() {
+    int libres = 0;
+    for (int i = 0; i < num_bloques; i++) {
+        if (disco[i] == 0) {
+            libres++;
+        }
+    }
+    return libres;
+}
+
+// el hueco mas grande: la mayor cantidad de bloques libres seguidos
+int hueco_mayor() {
+    int mayor = 0;
+    int seguidos = 0;
+    for (int i = 0; i < num_bloques; i++) {
+        if (disco[i] == 0) {
+            seguidos++;
+            if (seguidos > mayor) {
+                mayor = seguidos;
+            }
+        } else {
+            seguidos = 0;
+        }
+    }
+    return mayor;
+}
+
+// porcentaje de los bloques libres que no estan en el hueco mas grande
+double fragmentacion_externa() {
+    int libres = bloques_libres();
+    if (libres == 0) {
+        return 0;
+    }
+    return 100.0 * (libres - hueco_mayor()) / libres;
+}
+
 // muestra el error y termina el programa
 void error(string mensaje) {
     cout << "Dato invalido: " << mensaje << endl;
@@ -102,6 +145,7 @@ void crear_archivo(int seg) {
 
 int main() {
     leer_datos();
+    iniciar_disco();
     srand(time(NULL));
 
     cout << "Disco de " << disco_mb << " MB con bloques de " << bloque_kb << " KB" << endl;
