@@ -2,10 +2,18 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <ctime>
+#include <unistd.h>
 using namespace std;
 
 // cuanto ocupa un puntero a un bloque (en bytes)
 #define PUNTERO 4
+
+
+//un segundo de simulacion en ms
+//se puede modificar
+
+#define SEGUNDO_US 1000000
 
 // los tres mecanismos
 #define CONTIGUA 1
@@ -79,6 +87,17 @@ void leer_datos() {
     if (min_kb <= 0 || min_kb > max_kb) {
         error("el rango de archivos tiene que cumplir 0 < minimo <= maximo");
     }
+}
+
+
+// crea un archivo de tamaño aleatorio dentro del rango
+void crear_archivo(int seg) {
+    Archivo a;
+    a.numero = archivos.size() + 1;
+    a.tam_kb = min_kb + rand() % (max_kb - min_kb + 1);
+    a.existe = 1;
+    archivos.push_back(a);
+    cout << "[" << seg << " s] Se crea el archivo " << a.numero << " de " << a.tam_kb << " KB" << endl;
 }
 
 int main() {
